@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Welcome to SmartEdu Pro</h1>
+        <p>Transform your future with world-class education. Access thousands of courses from top instructors worldwide.</p>
+        <div class="hero-cta">
+            <a href="{{ url_for('elearning.index') }}" class="btn btn-primary"><span>Explore Courses</span></a>
+            <a href="{{ url_for('elibrary.index') }}" class="btn btn-outline"><span>Browse Library</span></a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section style="background: var(--bg-secondary);">
+    <div class="container">
+        <div class="section-title">
+            <h2>Why Choose SmartEdu Pro?</h2>
+            <p>Experience the future of education with cutting-edge features designed for modern learners</p>
+        </div>
+        <div class="grid-3">
+            <div class="card feature">
+                <div class="feature-icon">📚</div>
+                <h3>5000+ Courses</h3>
+                <p>Access thousands of expertly-crafted courses across all disciplines and skill levels.</p>
+            </div>
+            <div class="card feature">
+                <div class="feature-icon">💡</div>
+                <h3>Interactive Learning</h3>
+                <p>Engage with dynamic content, quizzes, coding challenges, and real-world projects.</p>
+            </div>
+            <div class="card feature">
+                <div class="feature-icon">🎓</div>
+                <h3>Certifications</h3>
+                <p>Earn industry-recognized certificates upon course completion to boost your career.</p>
+            </div>
+            <div class="card feature">
+                <div class="feature-icon">🌍</div>
+                <h3>Global Community</h3>
+                <p>Connect with 2M+ learners worldwide, share knowledge, and grow together.</p>
+            </div>
+            <div class="card feature">
+                <div class="feature-icon">📱</div>
+                <h3>Learn Anywhere</h3>
+                <p>Study on your terms with our responsive platform available on all devices.</p>
+            </div>
+            <div class="card feature">
+                <div class="feature-icon">⏰</div>
+                <h3>Lifetime Access</h3>
+                <p>Enroll once and access course materials forever with continuous updates.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section>
+    <div class="container">
+        <div class="section-title">
+            <h2>Popular Categories</h2>
+            <p>Explore diverse topics and find what interests you most</p>
+        </div>
+        <div class="grid-3">
+            <a href="#" class="category-card">
+                <div class="category-icon">💻</div>
+                <h4>Programming</h4>
+                <p>Web, Mobile, Backend</p>
+            </a>
+            <a href="#" class="category-card">
+                <div class="category-icon">🎨</div>
+                <h4>Design</h4>
+                <p>UI/UX, Graphics, Animation</p>
+            </a>
+            <a href="#" class="category-card">
+                <div class="category-icon">📊</div>
+                <h4>Data Science</h4>
+                <p>Analytics, AI, ML</p>
+            </a>
+            <a href="#" class="category-card">
+                <div class="category-icon">💼</div>
+                <h4>Business</h4>
+                <p>Management, Marketing</p>
+            </a>
+            <a href="#" class="category-card">
+                <div class="category-icon">🎬</div>
+                <h4>Creative</h4>
+                <p>Film, Music, Writing</p>
+            </a>
+            <a href="#" class="category-card">
+                <div class="category-icon">📚</div>
+                <h4>Academic</h4>
+                <p>Languages, Science, History</p>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: var(--text-primary); padding: 4rem 0;">
+    <div class="container">
+        <div class="grid-3" style="text-align: center;">
+            <div>
+                <div style="font-size: 3rem; font-weight: 900; margin-bottom: 0.5rem;">2M+</div>
+                <p style="color: rgba(255,255,255,0.9); font-weight: 600;">Active Learners</p>
+            </div>
+            <div>
+                <div style="font-size: 3rem; font-weight: 900; margin-bottom: 0.5rem;">500K</div>
+                <p style="color: rgba(255,255,255,0.9); font-weight: 600;">Certificates Awarded</p>
+            </div>
+            <div>
+                <div style="font-size: 3rem; font-weight: 900; margin-bottom: 0.5rem;">95%</div>
+                <p style="color: rgba(255,255,255,0.9); font-weight: 600;">Success Rate</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section>
+    <div class="container" style="text-align: center;">
+        <h2>Ready to Start Learning?</h2>
+        <p style="font-size: 1.125rem; margin-bottom: 2rem;">Join millions of students already learning on SmartEdu Pro</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ url_for('auth.signup') }}" class="btn btn-primary"><span>Get Started Free</span></a>
+            <a href="{{ url_for('elearning.index') }}" class="btn btn-secondary"><span>Explore All Courses</span></a>
+        </div>
+    </div>
+</section>
+{% endblock %}

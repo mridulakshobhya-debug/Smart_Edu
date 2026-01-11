@@ -1,0 +1,161 @@
+{% extends "base_no_navbar.html" %}
+
+{% block content %}
+<style>
+    .welcome-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        padding: 20px;
+    }
+
+    .welcome-card {
+        background: var(--bg-primary);
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        padding: 60px 40px;
+        max-width: 500px;
+        text-align: center;
+    }
+
+    .welcome-card h1 {
+        color: var(--primary);
+        margin-bottom: 10px;
+        font-size: 2.5em;
+    }
+
+    .welcome-card p {
+        color: var(--text-primary);
+        margin-bottom: 40px;
+        font-size: 1.1em;
+        line-height: 1.6;
+    }
+
+    .welcome-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .welcome-btn {
+        padding: 15px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-signup {
+        background: var(--primary);
+        color: white;
+    }
+
+    .btn-signup:hover {
+        background: darken(var(--primary), 10%);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-login {
+        background: var(--secondary);
+        color: white;
+    }
+
+    .btn-login:hover {
+        background: darken(var(--secondary), 10%);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-continue {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 2px solid var(--border);
+    }
+
+    .btn-continue:hover {
+        background: var(--bg-tertiary);
+        border-color: var(--text-secondary);
+        transform: translateY(-2px);
+    }
+
+    .welcome-icon {
+        font-size: 4em;
+        margin-bottom: 20px;
+    }
+
+    .feature-list {
+        text-align: left;
+        margin: 30px 0;
+        color: var(--text-primary);
+    }
+
+    .feature-list li {
+        margin: 10px 0;
+        list-style: none;
+        padding-left: 30px;
+        position: relative;
+        color: var(--text-primary);
+    }
+
+    .feature-list li:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: var(--primary);
+        font-weight: bold;
+    }
+
+    .welcome-theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--bg-secondary);
+        border: 2px solid var(--border);
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 1.5em;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .welcome-theme-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<div class="welcome-container">
+    <button class="welcome-theme-toggle" aria-label="Toggle theme">
+        <span class="theme-icon">🌙</span>
+    </button>
+    <div class="welcome-card">
+        <div class="welcome-icon">📚</div>
+        <h1>Welcome to SmartEdu</h1>
+        <p>Your gateway to world-class education and knowledge</p>
+        
+        <ul class="feature-list">
+            <li>Access 5000+ courses</li>
+            <li>Interactive learning experience</li>
+            <li>Earn certifications</li>
+            <li>Learn at your own pace</li>
+        </ul>
+
+        <div class="welcome-buttons">
+            <a href="{{ url_for('auth.signup') }}" class="welcome-btn btn-signup">Create Account & Get Started</a>
+            <a href="{{ url_for('auth.login') }}" class="welcome-btn btn-login">Sign In to Your Account</a>
+            <a href="{{ url_for('main.explore') }}" class="welcome-btn btn-continue">Continue Without Logging In</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

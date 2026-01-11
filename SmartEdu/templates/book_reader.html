@@ -1,0 +1,867 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  .book-reader-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-primary);
+  }
+
+  .reader-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .reader-title {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.3rem;
+  }
+
+  .reader-author {
+    margin: 0;
+    color: var(--text-tertiary);
+    font-size: 0.9rem;
+  }
+
+  .top-bar-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .progress-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+  }
+
+  .progress-label {
+    font-size: 0.9rem;
+    color: var(--text-tertiary);
+  }
+
+  .progress-number {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .progress-separator {
+    color: var(--text-tertiary);
+  }
+
+  .main-reading-area {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .book-sidebar {
+    width: 250px;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-title {
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+  }
+
+  .chapters-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .toc-item {
+    padding: 0.75rem;
+    background: transparent;
+    border: none;
+    border-left: 3px solid transparent;
+    border-radius: 4px;
+    text-align: left;
+    cursor: pointer;
+    font-weight: 400;
+    color: var(--text-secondary);
+    font-family: inherit;
+    transition: all 0.2s ease;
+  }
+
+  .toc-item:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+
+  .toc-item.active {
+    background: var(--bg-tertiary);
+    border-left-color: var(--primary);
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  .content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #book-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 3rem;
+    background: var(--bg-primary);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-primary);
+  }
+
+  #book-content h1,
+  #book-content h2,
+  #book-content h3,
+  #book-content h4,
+  #book-content h5,
+  #book-content h6 {
+    color: var(--text-primary);
+  }
+
+  #book-content p,
+  #book-content li,
+  #book-content a,
+  #book-content span,
+  #book-content div {
+    color: var(--text-primary);
+  }
+
+  #book-content ul,
+  #book-content ol {
+    color: var(--text-primary);
+  }
+
+  #book-content strong,
+  #book-content b {
+    color: var(--text-primary);
+  }
+
+  #book-content em,
+  #book-content i {
+    color: var(--text-primary);
+  }
+
+  #book-content table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 1.5rem 0 !important;
+    border: 2px solid var(--border) !important;
+    background: var(--bg-secondary) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  #book-content thead {
+    background: var(--bg-tertiary) !important;
+  }
+
+  #book-content th {
+    background: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+    padding: 1rem !important;
+    text-align: left !important;
+    font-weight: 700 !important;
+    border-bottom: 3px solid var(--border) !important;
+  }
+
+  #book-content td {
+    padding: 0.75rem 1rem !important;
+    border-bottom: 1px solid var(--border) !important;
+    color: var(--text-primary) !important;
+  }
+
+  #book-content tbody tr {
+    border-bottom: 1px solid var(--border) !important;
+    transition: background 0.2s ease !important;
+  }
+
+  #book-content tbody tr:last-child {
+    border-bottom: none !important;
+  }
+
+  #book-content tbody tr:nth-child(even) {
+    background: var(--bg-primary) !important;
+  }
+
+  #book-content tbody tr:nth-child(odd) {
+    background: var(--bg-secondary) !important;
+  }
+
+  #book-content tbody tr:hover {
+    background: var(--bg-tertiary) !important;
+  }
+
+  #book-content h1,
+  #book-content h2,
+  #book-content h3,
+  #book-content h4,
+  #book-content h5,
+  #book-content h6 {
+    color: var(--text-primary) !important;
+    margin-top: 1.5rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  #book-content h1 {
+    font-size: 2rem !important;
+    border-bottom: 2px solid var(--border) !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  #book-content h2 {
+    font-size: 1.5rem !important;
+    border-bottom: 1px solid var(--border) !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  #book-content h3 {
+    font-size: 1.2rem !important;
+  }
+
+  #book-content code {
+    background: var(--bg-tertiary) !important;
+    color: var(--primary) !important;
+    padding: 0.2rem 0.4rem !important;
+    border-radius: 4px !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 0.9em !important;
+  }
+
+  #book-content pre {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    padding: 1.5rem !important;
+    border-radius: 8px !important;
+    border: 1px solid var(--border) !important;
+    overflow-x: auto !important;
+    margin: 1.5rem 0 !important;
+    font-family: 'Courier New', monospace !important;
+    line-height: 1.5 !important;
+  }
+
+  #book-content pre code {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  #book-content blockquote {
+    border-left: 4px solid var(--primary) !important;
+    padding: 1rem 1.5rem !important;
+    margin: 1.5rem 0 !important;
+    background: var(--bg-secondary) !important;
+    border-radius: 0 8px 8px 0 !important;
+    font-style: italic !important;
+    color: var(--text-secondary) !important;
+  }
+
+  #book-content blockquote p {
+    margin: 0.5rem 0 !important;
+  }
+
+  #book-content hr {
+    border: none !important;
+    border-top: 2px solid var(--border) !important;
+    margin: 2rem 0 !important;
+  }
+
+  .reading-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+  }
+
+  .progress-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .progress-bar {
+    width: 200px;
+    background: var(--bg-tertiary);
+    border-radius: 10px;
+    height: 6px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    height: 100%;
+    transition: width 0.3s ease;
+  }
+
+  .progress-text {
+    color: var(--text-secondary);
+    min-width: 50px;
+    text-align: right;
+  }
+
+  .nav-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .right-sidebar {
+    width: 250px;
+    background: var(--bg-secondary);
+    border-left: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-section {
+    padding: 1rem;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+  }
+
+  .no-bookmarks {
+    color: var(--text-tertiary);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .book-sidebar,
+    .right-sidebar {
+      display: none;
+    }
+
+    .reading-footer {
+      padding: 1rem;
+      flex-wrap: wrap;
+    }
+
+    #book-content {
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+<!-- E-Reader Interface -->
+<section class="book-reader-container">
+  <!-- Top Bar -->
+  <div class="reader-top-bar">
+    <div>
+      <h2 class="reader-title">📖 {{ book_title }}</h2>
+      <p class="reader-author">by {{ book_author }}</p>
+    </div>
+    <div class="top-bar-controls">
+      <div class="progress-indicator">
+        <span class="progress-label">Progress</span>
+        <span id="current-page" class="progress-number">{{ current_page }}</span>
+        <span class="progress-separator">/</span>
+        <span id="total-pages" class="progress-number">20</span>
+      </div>
+      <a href="{{ url_for('elibrary.book_detail', book_id=book_id) }}" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem;"><span>← Back</span></a>
+    </div>
+  </div>
+
+  <!-- Main Reading Area -->
+  <div class="main-reading-area">
+    <!-- Left Navigation -->
+    <div class="book-sidebar">
+      <h3 class="sidebar-title">📚 Chapters</h3>
+      <div class="chapters-list">
+        {% for chapter_num in range(1, 21) %}
+        <form method="POST" style="display: contents;">
+          <button type="submit" name="chapter" value="{{ chapter_num }}" class="toc-item {% if chapter_num == current_page %}active{% endif %}">Chapter {{ chapter_num }}</button>
+        </form>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content-wrapper">
+      <div id="book-content">
+        {{ chapter_html }}
+      </div>
+
+      <!-- Bottom Navigation -->
+      <div class="reading-footer">
+        <form method="POST" style="display: contents;">
+          <button type="submit" name="chapter" value="{{ current_page - 1 }}" {% if current_page <= 1 %}disabled{% endif %} class="btn btn-outline nav-button" style="padding: 0.75rem 1.5rem;"><span>← Previous</span></button>
+        </form>
+        
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFillBar" data-current-page="{{ current_page }}"></div>
+          </div>
+          <span class="progress-text" id="progressPercentage">{{ (current_page / 20 * 100)|int }}%</span>
+        </div>
+
+        <form method="POST" style="display: contents;">
+          <button type="submit" name="chapter" value="{{ current_page + 1 }}" {% if current_page >= 20 %}disabled{% endif %} class="btn btn-primary nav-button" style="padding: 0.75rem 1.5rem;"><span>Next →</span></button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Right Sidebar - Bookmarks -->
+    <div class="right-sidebar">
+      <h3 class="sidebar-title">📔 Bookmarks</h3>
+      <div id="bookmarks-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <p class="no-bookmarks">No bookmarks yet</p>
+      </div>
+
+      <div class="sidebar-section" style="margin-top: auto;">
+        <p style="font-weight: 600; margin-bottom: 0.5rem;">Reading Progress</p>
+        <div style="width: 100%; height: 8px; background: var(--bg-primary); border-radius: 4px; overflow: hidden; margin-top: 0.5rem;">
+          <div id="progress-bar" class="progress-fill" style="width: 10%;"></div>
+        </div>
+        <p style="margin: 0.5rem 0 0 0; font-size: 0.85rem; color: var(--text-tertiary);">Page <span id="progress-text">1</span> of 10</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+        <button onclick="nextPage()" class="btn btn-primary" style="padding: 0.75rem 1.5rem;"><span>Next →</span></button>
+      </div>
+    </div>
+
+    <!-- Right Sidebar: Bookmarks & Notes -->
+    <div style="width: 250px; background: var(--bg-secondary); border-left: 1px solid var(--border); overflow-y: auto; padding: 2rem; display: flex; flex-direction: column;">
+      <h3 style="margin: 0 0 1rem 0; font-size: 1rem;">⭐ Bookmarks</h3>
+      <div id="bookmarks" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem;">
+        <p style="color: var(--text-tertiary); font-size: 0.9rem; margin: 0;">No bookmarks yet</p>
+      </div>
+
+      <button onclick="addBookmark()" class="btn btn-primary" style="width: 100%; padding: 0.75rem; margin-bottom: 1rem;"><span>🔖 Bookmark Current</span></button>
+
+      <h3 style="margin: 1rem 0 1rem 0; font-size: 1rem;">📝 Reading Progress</h3>
+      <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
+        <div style="margin-bottom: 0.5rem;">
+          <span style="font-size: 0.9rem; color: var(--text-tertiary);">Progress</span>
+          <div style="width: 100%; height: 8px; background: var(--bg-primary); border-radius: 4px; overflow: hidden; margin-top: 0.5rem;">
+            <div id="progress-bar" style="width: 10%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); transition: width 0.3s ease;"></div>
+          </div>
+        </div>
+        <p style="margin: 0.5rem 0 0 0; font-size: 0.85rem; color: var(--text-tertiary);">Page <span id="progress-text">1</span> of 10</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+const pages = [
+  {
+    title: "Chapter 1: Introduction",
+    content: `Introduction to {{ book_title }}
+
+{{ book_description }}
+
+This comprehensive book covers:
+• Fundamental concepts and principles
+• Practical real-world applications
+• Expert insights and best practices
+• Case studies and examples
+• Hands-on exercises
+
+Author: {{ book_author }}
+Pages: {{ book_pages }}
+Rating: ⭐ {{ book_rating }}/5.0
+
+Table of Contents:
+1. Introduction
+2. Core Concepts
+3. Advanced Topics
+4. Practical Examples
+5. Conclusion & References`
+  },
+  {
+    title: "Chapter 1: Introduction (cont.)",
+    content: `Getting Started
+
+This chapter introduces the fundamental concepts that you'll need to understand throughout the rest of the book. We'll cover:
+
+• What is {{ book_title }}?
+• Why is this important?
+• Who should read this book?
+• How to use this book effectively
+
+Key Learning Objectives:
+✓ Understand the basics of the subject
+✓ Identify key concepts and terminology
+✓ Prepare for advanced topics
+✓ Develop a learning strategy
+
+By the end of this chapter, you should have a solid foundation to progress through the remaining chapters.`
+  },
+  {
+    title: "Chapter 2: Core Concepts",
+    content: `Core Concepts and Principles
+
+2.1 Fundamental Principles
+
+The foundation of understanding {{ book_title }} lies in grasping the following core principles:
+
+• Principle 1: Understanding the basics provides the foundation for advanced knowledge
+• Principle 2: Practical application reinforces theoretical knowledge
+• Principle 3: Continuous learning and practice are essential for mastery
+• Principle 4: Critical thinking helps in problem-solving
+
+2.2 Key Terminology
+
+Before we proceed further, let's define some key terms:
+
+Term 1: Definition - A comprehensive explanation of the first important concept
+Term 2: Definition - Understanding this term is crucial for success
+Term 3: Definition - This concept bridges theory and practice`
+  },
+  {
+    title: "Chapter 2: Core Concepts (cont.)",
+    content: `2.3 Conceptual Framework
+
+The conceptual framework consists of:
+
+1. Foundation Layer
+   - Basic concepts
+   - Core principles
+   - Essential terminology
+
+2. Application Layer
+   - Practical uses
+   - Real-world scenarios
+   - Problem-solving approaches
+
+3. Advanced Layer
+   - Complex applications
+   - Edge cases
+   - Optimization techniques
+
+2.4 Relationships and Dependencies
+
+Understanding how different concepts relate to each other:
+
+[Concept A] → [Concept B] → [Concept C]
+     ↓            ↓            ↓
+  [Detail 1] [Detail 2] [Detail 3]`
+  },
+  {
+    title: "Chapter 3: Advanced Topics",
+    content: `Advanced Topics and Applications
+
+3.1 Moving Beyond Basics
+
+Now that you understand the fundamentals, we can explore more advanced applications:
+
+• Advanced Application 1: Exploring sophisticated use cases
+• Advanced Application 2: Integration with other concepts
+• Advanced Application 3: Optimization and best practices
+• Advanced Application 4: Future directions and innovations
+
+3.2 Case Study 1
+
+Let's examine a real-world case study that demonstrates advanced concepts:
+
+Background: A typical scenario in professional settings
+Challenge: The problem that needed to be solved
+Solution: The approach and methodology used
+Results: Outcomes and lessons learned
+
+3.3 Performance Optimization
+
+Key optimization techniques:
+
+Technique 1: Description and implementation
+Technique 2: Benefits and trade-offs
+Technique 3: When to use and when to avoid`
+  },
+  {
+    title: "Chapter 3: Advanced Topics (cont.)",
+    content: `3.4 Industry Best Practices
+
+Following industry standards and best practices:
+
+✓ Standard 1: Why this is important and how to implement it
+✓ Standard 2: Common pitfalls and how to avoid them
+✓ Standard 3: Tools and resources for success
+✓ Standard 4: Measurement and continuous improvement
+
+3.5 Expert Insights
+
+Insights from industry experts and practitioners:
+
+"Quote 1" - Expert Name, Organization
+
+This highlights the importance of...
+
+"Quote 2" - Another Expert, Institution
+
+This emphasizes the need for...`
+  },
+  {
+    title: "Chapter 4: Practical Examples",
+    content: `Practical Examples and Hands-On Learning
+
+4.1 Example 1: Step-by-Step Implementation
+
+Let's walk through a complete example:
+
+Step 1: Setup and Preparation
+- Prerequisites
+- Tools needed
+- Initial setup
+
+Step 2: Implementation
+- Code or process overview
+- Key components
+- Integration points
+
+Step 3: Testing and Validation
+- Verification methods
+- Expected results
+- Troubleshooting
+
+Step 4: Deployment and Monitoring
+- Production considerations
+- Monitoring strategies
+- Maintenance procedures
+
+4.2 Example 2: Complex Scenario
+
+A more complex example involving multiple concepts:
+
+Problem Statement: Define the challenge
+Analysis: Break down the problem
+Solution Architecture: Design approach
+Implementation Details: Technical execution
+Results and Lessons: Outcomes and takeaways`
+  },
+  {
+    title: "Chapter 4: Practical Examples (cont.)",
+    content: `4.3 Common Pitfalls and Solutions
+
+Pitfall 1: Description and Solution
+- Why this happens
+- How to identify it
+- Prevention strategies
+
+Pitfall 2: Description and Solution
+- Common mistakes
+- Warning signs
+- Best practices to avoid
+
+Pitfall 3: Description and Solution
+- Real-world examples
+- Recovery procedures
+- Long-term prevention
+
+4.4 Troubleshooting Guide
+
+Quick reference for common issues:
+
+Issue: Symptom and Solution
+Issue: Symptom and Solution
+Issue: Symptom and Solution
+Issue: Symptom and Solution
+
+For more detailed help, refer to the Appendix or contact support.`
+  },
+  {
+    title: "Chapter 5: Conclusion",
+    content: `Conclusion and Next Steps
+
+5.1 Key Takeaways
+
+The most important concepts from this book:
+
+✓ Takeaway 1: Core understanding that will serve as foundation
+✓ Takeaway 2: Practical skill you can apply immediately
+✓ Takeaway 3: Mindset shift for continued learning
+✓ Takeaway 4: Resources and tools for future development
+
+5.2 Your Learning Path
+
+Recommended next steps:
+
+1. Practice: Apply what you've learned to real projects
+2. Explore: Investigate related topics and concepts
+3. Build: Create something using your new knowledge
+4. Share: Teach others and reinforce your learning
+5. Evolve: Stay updated with latest developments
+
+5.3 Resources for Further Learning
+
+• Recommended books: Additional reading materials
+• Online courses: Video-based learning options
+• Communities: Networking and peer learning
+• Tools and Software: Practical resources
+• Websites and Blogs: Latest information and updates
+
+5.4 Final Thoughts
+
+The journey of learning is continuous. By mastering the content in this book, you've taken an important step forward. Remember to:
+
+• Practice consistently
+• Stay curious and keep learning
+• Apply knowledge to real situations
+• Help others on their learning journey
+
+Thank you for reading {{ book_title }}. We hope you found it valuable and inspiring.
+
+Best of luck on your continued journey!`
+  },
+  {
+    title: "References and Appendix",
+    content: `References and Additional Resources
+
+Appendix A: Glossary of Terms
+• Term 1: Complete definition and usage
+• Term 2: Related concepts and applications
+• Term 3: Common misconceptions and clarifications
+
+Appendix B: Additional Resources
+• Books and Publications
+• Online Platforms
+• Research Papers
+• Tools and Software
+
+Appendix C: Code Examples (if applicable)
+Complete source code and implementation examples for reference
+
+Appendix D: Further Reading
+• Foundational texts
+• Advanced materials
+• Related disciplines
+• Current research
+
+Index
+A comprehensive alphabetical index of all topics, concepts, and references covered in this book.
+
+---
+End of Book
+
+Thank you for reading!
+For questions, corrections, or feedback, please visit our website or contact us through the support channels.
+
+© {{ book_title }} - All Rights Reserved`
+  }
+];
+
+let currentPage = 1;
+
+function loadPage(page) {
+  if (page < 1 || page > pages.length) return;
+  
+  currentPage = page;
+  const content = pages[page - 1];
+  
+  document.getElementById('book-content').innerHTML = `
+    <h2 style="color: var(--primary); margin-top: 0;">${content.title}</h2>
+    <div style="white-space: pre-wrap; color: var(--text-secondary);">${escapeHtml(content.content)}</div>
+  `;
+  
+  document.getElementById('current-page').textContent = page;
+  document.getElementById('page-input').value = page;
+  document.getElementById('progress-text').textContent = page;
+  document.getElementById('progress-bar').style.width = (page / pages.length * 100) + '%';
+  
+  // Update TOC highlighting
+  document.querySelectorAll('.toc-item').forEach((item, idx) => {
+    if (Math.ceil((idx + 1) / 2) === Math.ceil(page / 2)) {
+      item.style.background = 'var(--bg-tertiary)';
+      item.style.borderLeftColor = 'var(--primary)';
+      item.style.color = 'var(--primary)';
+      item.style.fontWeight = '600';
+    } else {
+      item.style.background = 'transparent';
+      item.style.borderLeftColor = 'transparent';
+      item.style.color = 'var(--text-secondary)';
+      item.style.fontWeight = 'normal';
+    }
+  });
+  
+  window.scrollTo(0, 0);
+}
+
+function nextPage() {
+  if (currentPage < pages.length) loadPage(currentPage + 1);
+}
+
+function previousPage() {
+  if (currentPage > 1) loadPage(currentPage - 1);
+}
+
+function goToPage(page) {
+  const pageNum = parseInt(page);
+  if (pageNum >= 1 && pageNum <= pages.length) {
+    loadPage(pageNum);
+  }
+}
+
+function addBookmark() {
+  const bookmarksDiv = document.getElementById('bookmarks');
+  if (bookmarksDiv.children.length === 1 && bookmarksDiv.children[0].textContent === 'No bookmarks yet') {
+    bookmarksDiv.innerHTML = '';
+  }
+  
+  const bookmark = document.createElement('button');
+  bookmark.style.cssText = 'padding: 0.5rem; background: var(--bg-tertiary); border: none; border-radius: 6px; cursor: pointer; text-align: left; color: var(--text-secondary); font-family: inherit;';
+  bookmark.textContent = `📌 Page ${currentPage}: ${pages[currentPage - 1].title}`;
+  bookmark.onclick = () => loadPage(currentPage);
+  
+  bookmarksDiv.appendChild(bookmark);
+  alert('✓ Page ' + currentPage + ' bookmarked!');
+}
+
+function escapeHtml(text) {
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+// Load first page on load
+document.addEventListener('DOMContentLoaded', () => {
+  // loadPage(1); // Disabled - using server-rendered HTML content instead
+  
+  // Update progress bar width
+  const progressFillBar = document.getElementById('progressFillBar');
+  if (progressFillBar) {
+    const currentPage = parseInt(progressFillBar.getAttribute('data-current-page'));
+    const totalPages = 20;
+    const progressPercentage = (currentPage / totalPages) * 100;
+    
+    progressFillBar.style.width = progressPercentage + '%';
+    
+    const progressPercentageSpan = document.getElementById('progressPercentage');
+    if (progressPercentageSpan) {
+      progressPercentageSpan.textContent = Math.round(progressPercentage) + '%';
+    }
+  }
+});
+</script>
+
+{% endblock %}

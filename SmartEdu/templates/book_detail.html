@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Book Detail Hero -->
+<section class="hero" style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(124, 58, 237, 0.1));">
+    <div class="hero-content">
+        <h1>{{ book_title }}</h1>
+        <p>{{ book_author }}</p>
+    </div>
+</section>
+
+<!-- Book Content -->
+<section>
+    <div class="container">
+        <div style="max-width: 1000px; margin: 0 auto;">
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; align-items: start;">
+                <!-- Book Cover & Info -->
+                <div>
+                    <div class="card" style="text-align: center; margin-bottom: 2rem;">
+                        <div style="font-size: 10rem; padding: 2rem;">📖</div>
+                        <div style="padding: 1.5rem;">
+                            <h2 style="margin: 0 0 0.5rem 0;">{{ book_title }}</h2>
+                            <p style="color: var(--text-secondary); margin: 0 0 1rem 0;">by {{ book_author }}</p>
+                            <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                                <span class="badge badge-primary">{{ book_category }}</span>
+                                <span style="color: var(--text-tertiary);">📖 {{ book_pages }} pages</span>
+                            </div>
+                            <div style="font-size: 1.3rem; margin-bottom: 1.5rem;">⭐ {{ book_rating }}/5.0</div>
+                            <a href="{{ url_for('elibrary.book_reader', book_id=book_id) }}" class="btn btn-primary" style="width: 100%;"><span>📖 Read Now</span></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book Details -->
+                <div>
+                    <div class="card" style="margin-bottom: 2rem;">
+                        <div style="padding: 2rem;">
+                            <h3 style="margin-bottom: 1.5rem;">About This Book</h3>
+                            <p style="line-height: 1.8; color: var(--text-secondary); margin-bottom: 2rem;">
+                                {{ book_description }}
+                            </p>
+
+                            <h3 style="margin-bottom: 1rem;">Book Details</h3>
+                            <div style="display: grid; gap: 1rem;">
+                                <div style="display: flex; justify-content: space-between; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
+                                    <span style="color: var(--text-tertiary);">Author</span>
+                                    <span style="font-weight: 600;">{{ book_author }}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
+                                    <span style="color: var(--text-tertiary);">Category</span>
+                                    <span style="font-weight: 600;">{{ book_category }}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
+                                    <span style="color: var(--text-tertiary);">Pages</span>
+                                    <span style="font-weight: 600;">{{ book_pages }}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding-bottom: 1rem;">
+                                    <span style="color: var(--text-tertiary);">ISBN</span>
+                                    <span style="font-weight: 600;">{{ book_isbn }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ratings & Reviews -->
+                    <div class="card">
+                        <div style="padding: 2rem;">
+                            <h3 style="margin-bottom: 1.5rem;">Ratings & Reviews</h3>
+                            <div style="margin-bottom: 1.5rem;">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                    <span style="font-size: 2rem; font-weight: bold;">{{ book_rating }}</span>
+                                    <div>
+                                        <div style="font-size: 1.2rem;">⭐⭐⭐⭐⭐</div>
+                                        <p style="color: var(--text-tertiary); margin: 0.25rem 0 0 0;">Based on 1000+ reviews</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px;">
+                                <p style="font-weight: 600; margin-bottom: 0.5rem;">Sample Review</p>
+                                <p style="color: var(--text-secondary); margin: 0;">⭐⭐⭐⭐⭐ "Excellent book! Very comprehensive and well-written. Highly recommended for anyone interested in this topic."</p>
+                                <p style="color: var(--text-tertiary); margin: 0.5rem 0 0 0; font-size: 0.9rem;">— John Doe</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Books -->
+            <div style="margin-top: 3rem;">
+                <h3 style="margin-bottom: 1.5rem;">Similar Books You Might Like</h3>
+                <div class="grid grid-3">
+                    <div class="card book-card">
+                        <div class="book-header">📕</div>
+                        <div class="book-body">
+                            <h3>Design Patterns</h3>
+                            <div class="course-meta">
+                                <span>✍️ Gang of Four</span>
+                                <span class="badge badge-primary">CS</span>
+                            </div>
+                            <p>Essential guide to reusable object-oriented software design patterns.</p>
+                            <div class="course-meta">
+                                <span>📖 395 pages</span>
+                                <span class="course-rating">⭐ 4.7</span>
+                            </div>
+                            <div class="course-footer">
+                                <button class="btn btn-primary" style="flex: 1;" onclick="readBook('design-patterns')"><span>Read Now</span></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card book-card">
+                        <div class="book-header">📗</div>
+                        <div class="book-body">
+                            <h3>Refactoring</h3>
+                            <div class="course-meta">
+                                <span>✍️ Martin Fowler</span>
+                                <span class="badge badge-primary">Dev</span>
+                            </div>
+                            <p>Improving the Design of Existing Code with proven refactoring techniques.</p>
+                            <div class="course-meta">
+                                <span>📖 418 pages</span>
+                                <span class="course-rating">⭐ 4.8</span>
+                            </div>
+                            <div class="course-footer">
+                                <button class="btn btn-primary" style="flex: 1;" onclick="readBook('refactoring')"><span>Read Now</span></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card book-card">
+                        <div class="book-header">📘</div>
+                        <div class="book-body">
+                            <h3>The Mythical Man-Month</h3>
+                            <div class="course-meta">
+                                <span>✍️ Frederick Brooks</span>
+                                <span class="badge badge-primary">Management</span>
+                            </div>
+                            <p>Timeless insights into software project management and team dynamics.</p>
+                            <div class="course-meta">
+                                <span>📖 432 pages</span>
+                                <span class="course-rating">⭐ 4.6</span>
+                            </div>
+                            <div class="course-footer">
+                                <button class="btn btn-primary" style="flex: 1;" onclick="readBook('mythical-man-month')"><span>Read Now</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function readBook(bookId = '{{ book_id }}') {
+    const bookTitle = '{{ book_title }}';
+    const userName = '{{ current_user.full_name or current_user.username }}';
+    
+    // In a real application, this would open a PDF reader or e-reader interface
+    alert(`📖 Opening "${bookTitle}"\n\nYour reading progress will be saved automatically.\n\nHappy Reading, ${userName}!`);
+    
+    // Here you could redirect to an e-reader page or open a PDF viewer
+    console.log('Opening book:', bookId);
+}
+</script>
+
+{% endblock %}

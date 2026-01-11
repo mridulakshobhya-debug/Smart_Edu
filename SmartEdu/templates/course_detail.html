@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero" style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(124, 58, 237, 0.1));">
+    <div class="hero-content">
+        <h1>{{ course_name }}</h1>
+        <p>Start your learning journey with comprehensive modules and expert instruction</p>
+    </div>
+</section>
+
+<!-- Course Content -->
+<section>
+    <div class="container">
+        <div style="max-width: 900px; margin: 0 auto;">
+            <!-- Course Info Card -->
+            <div class="card" style="margin-bottom: 2rem;">
+                <div style="padding: 2rem;">
+                    <h2>{{ course_name }}</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+                        <div>
+                            <p style="color: var(--text-tertiary); margin-bottom: 0.5rem;">Instructor</p>
+                            <p style="font-weight: 600; font-size: 1.1rem;">Expert Instructor</p>
+                        </div>
+                        <div>
+                            <p style="color: var(--text-tertiary); margin-bottom: 0.5rem;">Duration</p>
+                            <p style="font-weight: 600; font-size: 1.1rem;">8-14 weeks</p>
+                        </div>
+                        <div>
+                            <p style="color: var(--text-tertiary); margin-bottom: 0.5rem;">Level</p>
+                            <p style="font-weight: 600; font-size: 1.1rem;">All Levels</p>
+                        </div>
+                        <div>
+                            <p style="color: var(--text-tertiary); margin-bottom: 0.5rem;">Rating</p>
+                            <p style="font-weight: 600; font-size: 1.1rem;">⭐ 4.8/5.0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Curriculum -->
+            <div class="card" style="margin-bottom: 2rem;">
+                <div style="padding: 2rem;">
+                    <h3 style="margin-bottom: 1.5rem;">Course Curriculum (6 Modules)</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <!-- Module 1 -->
+                        <a href="{{ url_for('elearning.module_detail', course_id=course_id, module_id='module1') }}" style="text-decoration: none; color: inherit;">
+                            <div style="padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px; cursor: pointer; transition: all 0.2s;" 
+                                 onmouseover="this.style.boxShadow='0 4px 12px rgba(37,99,235,0.15)'; this.style.transform='translateY(-2px)'" 
+                                 onmouseout="this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <span style="font-size: 1.3rem;">📖</span>
+                                    <div style="flex: 1;">
+                                        <h4 style="margin: 0;">Module 1: Fundamentals & Getting Started</h4>
+                                        <p style="color: var(--text-tertiary); margin: 0.25rem 0 0 0;">Introduction, setup, and core concepts (4 lessons + quiz)</p>
+                                    </div>
+                                    <span style="font-size: 1.5rem;">→</span>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Module 2 -->
+                        <a href="{{ url_for('elearning.module_detail', course_id=course_id, module_id='module2') }}" style="text-decoration: none; color: inherit;">
+                            <div style="padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px; cursor: pointer; transition: all 0.2s;" 
+                                 onmouseover="this.style.boxShadow='0 4px 12px rgba(37,99,235,0.15)'; this.style.transform='translateY(-2px)'" 
+                                 onmouseout="this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <span style="font-size: 1.3rem;">🔧</span>
+                                    <div style="flex: 1;">
+                                        <h4 style="margin: 0;">Module 2: Intermediate Techniques & Best Practices</h4>
+                                        <p style="color: var(--text-tertiary); margin: 0.25rem 0 0 0;">Building on fundamentals with advanced patterns (4 lessons + quiz)</p>
+                                    </div>
+                                    <span style="font-size: 1.5rem;">→</span>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Module 3 -->
+                        <a href="{{ url_for('elearning.module_detail', course_id=course_id, module_id='module3') }}" style="text-decoration: none; color: inherit;">
+                            <div style="padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px; cursor: pointer; transition: all 0.2s;" 
+                                 onmouseover="this.style.boxShadow='0 4px 12px rgba(37,99,235,0.15)'; this.style.transform='translateY(-2px)'" 
+                                 onmouseout="this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <span style="font-size: 1.3rem;">⚡</span>
+                                    <div style="flex: 1;">
+                                        <h4 style="margin: 0;">Module 3: Advanced Concepts & Optimization</h4>
+                                        <p style="color: var(--text-tertiary); margin: 0.25rem 0 0 0;">Performance, scalability, and optimization techniques (4 lessons + quiz)</p>
+                                    </div>
+                                    <span style="font-size: 1.5rem;">→</span>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Module 4 -->
+                        <a href="{{ url_for('elearning.module_detail', course_id=course_id, module_id='module4') }}" style="text-decoration: none; color: inherit;">
+                            <div style="padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px; cursor: pointer; transition: all 0.2s;" 
+                                 onmouseover="this.style.boxShadow='0 4px 12px rgba(37,99,235,0.15)'; this.style.transform='translateY(-2px)'" 
+                                 onmouseout="this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <span style="font-size: 1.3rem;">🚀</span>
+                                    <div style="flex: 1;">
+                                        <h4 style="margin: 0;">Module 4: Frameworks & Tools</h4>
+                                        <p style="color: var(--text-tertiary); margin: 0.25rem 0 0 0;">Using industry-standard frameworks and development tools (4 lessons + quiz)</p>
+                                    </div>
+                                    <span style="font-size: 1.5rem;">→</span>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Module 5 -->
+                        <a href="{{ url_for('elearning.module_detail', course_id=course_id, module_id='module5') }}" style="text-decoration: none; color: inherit;">
+                            <div style="padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px; cursor: pointer; transition: all 0.2s;" 
+                                 onmouseover="this.style.boxShadow='0 4px 12px rgba(37,99,235,0.15)'; this.style.transform='translateY(-2px)'" 
+                                 onmouseout="this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <span style="font-size: 1.3rem;">💡</span>
+                                    <div style="flex: 1;">
+                                        <h4 style="margin: 0;">Module 5: Case Studies & Real-World Applications</h4>
+                                        <p style="color: var(--text-tertiary); margin: 0.25rem 0 0 0;">Analyzing real projects and solving complex problems (4 lessons + quiz)</p>
+                                    </div>
+                                    <span style="font-size: 1.5rem;">→</span>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Module 6 -->
+                        <a href="{{ url_for('elearning.module_detail', course_id=course_id, module_id='module6') }}" style="text-decoration: none; color: inherit;">
+                            <div style="padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px; cursor: pointer; transition: all 0.2s;" 
+                                 onmouseover="this.style.boxShadow='0 4px 12px rgba(37,99,235,0.15)'; this.style.transform='translateY(-2px)'" 
+                                 onmouseout="this.style.boxShadow='none'; this.style.transform='translateY(0)'">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <span style="font-size: 1.3rem;">🏆</span>
+                                    <div style="flex: 1;">
+                                        <h4 style="margin: 0;">Module 6: Mastery & Capstone Project</h4>
+                                        <p style="color: var(--text-tertiary); margin: 0.25rem 0 0 0;">Final project, code review, and certification prep (4 lessons + final exam)</p>
+                                    </div>
+                                    <span style="font-size: 1.5rem;">→</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="card" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 2rem; text-align: center;">
+                <h3>Ready to Start?</h3>
+                <p>Join thousands of students already learning on SmartEdu Pro</p>
+                {% if is_enrolled %}
+                    <a href="{{ url_for('elearning.lesson', course_id=course_id, module_id='module1', lesson_id='1') }}" class="btn" style="background: white; color: var(--primary);"><span>▶ Learn Now</span></a>
+                {% else %}
+                    <a href="{{ url_for('elearning.module_detail', course_id=course_id, module_id='module1') }}" class="btn" style="background: white; color: var(--primary);"><span>▶ Learn Now</span></a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function enrollCourse() {
+    const userName = '{{ current_user.full_name or current_user.username }}' || 'Learner';
+    alert(`Welcome to the course, ${userName}! 🎓\n\nYou are now enrolled. Start with Module 1 to begin your learning journey.`);
+    console.log('Course enrollment successful');
+}
+</script>
+
+{% endblock %}

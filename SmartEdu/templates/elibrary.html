@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Digital Library</h1>
+        <p>Access thousands of books, journals, and educational resources. Expand your knowledge anytime, anywhere.</p>
+        <div class="hero-cta" style="max-width: 500px; margin: 2rem auto 0;">
+            <input type="text" placeholder="🔍 Search books, authors, topics..." style="border-radius: 2rem; padding: 1rem 1.5rem; flex: 1; border: 2px solid white; background: rgba(255,255,255,0.1); color: white; font-size: 1rem;">
+            <button class="btn btn-primary"><span>Search</span></button>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Books Section -->
+<section>
+    <div class="container">
+        <div class="section-title">
+            <h2>Featured Collections</h2>
+            <p>Explore our most popular and highly-rated books</p>
+        </div>
+        <div class="grid grid-3">
+            <!-- Book 1 -->
+            <div class="card book-card">
+                <div class="book-header">📕</div>
+                <div class="book-body">
+                    <h3>Introduction to Algorithms</h3>
+                    <div class="course-meta">
+                        <span>✍️ T.H. Cormen</span>
+                        <span class="badge badge-primary">CS</span>
+                    </div>
+                    <p>A comprehensive guide to algorithms and data structures. The definitive textbook used in universities worldwide.</p>
+                    <div class="course-meta">
+                        <span>📖 1328 pages</span>
+                        <span class="course-rating">⭐ 4.9</span>
+                    </div>
+                    <div class="course-footer">
+                        <a href="{{ url_for('elibrary.book_detail', book_id='algorithms') }}" class="btn btn-primary" style="flex: 1; text-align: center; text-decoration: none;"><span>Read Now</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book 2 -->
+            <div class="card book-card">
+                <div class="book-header">📗</div>
+                <div class="book-body">
+                    <h3>Clean Code</h3>
+                    <div class="course-meta">
+                        <span>✍️ Robert Martin</span>
+                        <span class="badge badge-primary">Dev</span>
+                    </div>
+                    <p>Learn best practices for writing clean, maintainable, and professional code. Essential reading for all developers.</p>
+                    <div class="course-meta">
+                        <span>📖 464 pages</span>
+                        <span class="course-rating">⭐ 4.8</span>
+                    </div>
+                    <div class="course-footer">
+                        <a href="{{ url_for('elibrary.book_detail', book_id='clean-code') }}" class="btn btn-primary" style="flex: 1; text-align: center; text-decoration: none;"><span>Read Now</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book 3 -->
+            <div class="card book-card">
+                <div class="book-header">📘</div>
+                <div class="book-body">
+                    <h3>Thinking, Fast and Slow</h3>
+                    <div class="course-meta">
+                        <span>✍️ Daniel Kahneman</span>
+                        <span class="badge badge-primary">Psychology</span>
+                    </div>
+                    <p>Explore how human thinking and decision-making works. Understand cognitive biases and heuristics.</p>
+                    <div class="course-meta">
+                        <span>📖 499 pages</span>
+                        <span class="course-rating">⭐ 4.7</span>
+                    </div>
+                    <div class="course-footer">
+                        <a href="{{ url_for('elibrary.book_detail', book_id='thinking-fast-slow') }}" class="btn btn-primary" style="flex: 1; text-align: center; text-decoration: none;"><span>Read Now</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book 4 -->
+            <div class="card book-card">
+                <div class="book-header">📙</div>
+                <div class="book-body">
+                    <h3>The Pragmatic Programmer</h3>
+                    <div class="course-meta">
+                        <span>✍️ Hunt & Thomas</span>
+                        <span class="badge badge-primary">Dev</span>
+                    </div>
+                    <p>Practical tips and techniques for successful software development. Timeless wisdom for every programmer.</p>
+                    <div class="course-meta">
+                        <span>📖 352 pages</span>
+                        <span class="course-rating">⭐ 4.8</span>
+                    </div>
+                    <div class="course-footer">
+                        <a href="{{ url_for('elibrary.book_detail', book_id='pragmatic-programmer') }}" class="btn btn-primary" style="flex: 1; text-align: center; text-decoration: none;"><span>Read Now</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book 5 -->
+            <div class="card book-card">
+                <div class="book-header">📓</div>
+                <div class="book-body">
+                    <h3>Design Patterns</h3>
+                    <div class="course-meta">
+                        <span>✍️ Gang of Four</span>
+                        <span class="badge badge-primary">Design</span>
+                    </div>
+                    <p>Essential guide to reusable object-oriented software design patterns.</p>
+                    <div class="course-meta">
+                        <span>📖 395 pages</span>
+                        <span class="course-rating">⭐ 4.7</span>
+                    </div>
+                    <div class="course-footer">
+                        <a href="{{ url_for('elibrary.book_detail', book_id='design-patterns') }}" class="btn btn-primary" style="flex: 1; text-align: center; text-decoration: none;"><span>Read Now</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book 6 -->
+            <div class="card book-card">
+                <div class="book-header">📔</div>
+                <div class="book-body">
+                    <h3>Refactoring</h3>
+                    <div class="course-meta">
+                        <span>✍️ Martin Fowler</span>
+                        <span class="badge badge-primary">Dev</span>
+                    </div>
+                    <p>Improving the Design of Existing Code with proven refactoring techniques.</p>
+                    <div class="course-meta">
+                        <span>📖 418 pages</span>
+                        <span class="course-rating">⭐ 4.8</span>
+                    </div>
+                    <div class="course-footer">
+                        <a href="{{ url_for('elibrary.book_detail', book_id='refactoring') }}" class="btn btn-primary" style="flex: 1; text-align: center; text-decoration: none;"><span>Read Now</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section style="background: var(--bg-secondary);">
+    <div class="container">
+        <div class="section-title">
+            <h2>Browse by Category</h2>
+            <p>Find books in your favorite subjects</p>
+        </div>
+        <div class="grid-3">
+            <a href="#" class="card" style="cursor: pointer; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem;">💻</div>
+                <h4>Technology</h4>
+                <p style="color: var(--text-tertiary);">2,450 Books</p>
+            </a>
+            <a href="#" class="card" style="cursor: pointer; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem;">📊</div>
+                <h4>Business</h4>
+                <p style="color: var(--text-tertiary);">1,820 Books</p>
+            </a>
+            <a href="#" class="card" style="cursor: pointer; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎨</div>
+                <h4>Creative Arts</h4>
+                <p style="color: var(--text-tertiary);">1,340 Books</p>
+            </a>
+            <a href="#" class="card" style="cursor: pointer; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem;">🧬</div>
+                <h4>Science</h4>
+                <p style="color: var(--text-tertiary);">1,650 Books</p>
+            </a>
+            <a href="#" class="card" style="cursor: pointer; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem;">🌍</div>
+                <h4>History</h4>
+                <p style="color: var(--text-tertiary);">980 Books</p>
+            </a>
+            <a href="#" class="card" style="cursor: pointer; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem;">🧠</div>
+                <h4>Psychology</h4>
+                <p style="color: var(--text-tertiary);">1,120 Books</p>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section>
+    <div class="container" style="text-align: center;">
+        <h2>Expand Your Knowledge</h2>
+        <p style="font-size: 1.125rem; margin-bottom: 2rem;">Start reading from our extensive digital library today</p>
+        <a href="{{ url_for('auth.signup') }}" class="btn btn-primary"><span>Access Library Now</span></a>
+    </div>
+</section>
+{% endblock %}

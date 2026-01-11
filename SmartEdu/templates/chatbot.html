@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section style="min-height: 100vh; display: flex; flex-direction: column; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);">
+  <div class="container" style="flex: 1; display: flex; flex-direction: column; padding: 2rem 0;">
+    <h2 style="color: var(--text-primary); text-align: center; margin-bottom: 1.5rem; font-size: 1.8rem;">🤖 SmartEdu AI Assistant</h2>
+    
+    <div id="messages" style="flex: 1; overflow-y: auto; margin-bottom: 2rem; padding: 2rem; background: var(--bg-primary); border-radius: var(--radius-xl); color: var(--text-primary); border: 1px solid var(--border);">
+      <div class="chat-message ai" style="margin-bottom: 1.5rem; text-align:left;">
+        <div style="display:inline-block; background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius-lg); max-width: 70%; backdrop-filter: blur(10px);">
+          <p style="color: var(--text-primary); margin: 0;">👋 Hello! I'm your SmartEdu AI Assistant. How can I help you today? Ask me anything about courses, programming, or learning!</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:1rem; align-items:center;">
+      <input id="chat-input" type="text" placeholder="Ask me anything..." style="flex:1; background: var(--bg-secondary); border: 2px solid var(--border); color: var(--text-primary); padding: 1rem; border-radius: .75rem; font-size: 1rem; font-family: inherit;" />
+      <style>
+        #chat-input::placeholder {
+          color: var(--text-secondary);
+        }
+      </style>
+      <button id="send-btn" class="btn btn-primary" style="background: white; color: #2563eb; font-weight: 600; border: none; padding: 0.75rem 2rem; border-radius: .75rem; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">Send</button>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const input = document.getElementById('chat-input');
+  const sendBtn = document.getElementById('send-btn');
+  const messages = document.getElementById('messages');
+
+  function appendMessage(text, sender='ai') {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'chat-message ' + sender;
+    wrapper.style.marginBottom = '1rem';
+    wrapper.style.textAlign = sender === 'user' ? 'right' : 'left';
+    
+    const bubble = document.createElement('div');
+    bubble.style.display = 'inline-block';
+    bubble.style.background = sender === 'user' ? 'var(--primary)' : 'var(--bg-secondary)';
+    bubble.style.color = sender === 'user' ? 'white' : 'var(--text-primary)';
+    bubble.style.padding = '1rem 1.25rem';
+    bubble.style.borderRadius = '12px';
+    bubble.style.maxWidth = '70%';
+    bubble.style.wordWrap = 'break-word';
+    bubble.style.backdropFilter = sender === 'ai' ? 'blur(10px)' : 'none';
+    bubble.style.border = sender === 'ai' ? '1px solid var(--border)' : 'none';
+    
+    if (sender === 'ai') {
+      bubble.innerHTML = marked.parse(text);
+      bubble.style.lineHeight = '1.6';
+    } else {
+      bubble.textContent = text;
+    }
+    
+    wrapper.appendChild(bubble);
+    messages.appendChild(wrapper);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  async function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+    appendMessage(text, 'user');
+    input.value = '';
+    sendBtn.disabled = true;
+    sendBtn.textContent = 'Sending...';
+    try {
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message: text})
+      });
+      const data = await res.json();
+      appendMessage(data.reply || 'No reply from server', 'ai');
+    } catch (err) {
+      appendMessage('Error: ' + err.message, 'ai');
+    } finally {
+      sendBtn.disabled = false;
+      sendBtn.textContent = 'Send';
+      input.focus();
+    }
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+});
+</script>
+
+{% endblock %}

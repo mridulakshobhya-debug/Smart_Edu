@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>E-Learning Courses (82+ Available)</h1>
+        <p>Master programming, data science, web development, AI, mathematics, sciences, and academic subjects with our comprehensive course library.</p>
+    </div>
+</section>
+
+<!-- Filter and Search Section -->
+<section style="background: var(--bg-secondary); padding: 2rem 0;">
+    <div class="container">
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 2rem;">
+            <input type="text" id="courseSearch" placeholder="Search courses..." 
+                   style="flex: 1; max-width: 400px; padding: 0.75rem; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem;" 
+                   onkeyup="filterCourses()">
+            <select id="levelFilter" onchange="filterCourses()"
+                    style="padding: 0.75rem; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem;">
+                <option value="">All Levels</option>
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+            </select>
+        </div>
+        <div class="module-tabs">
+            <button class="module-tab active" data-category="all" onclick="filterByCategory('all')">
+                📚 All Courses
+            </button>
+            <button class="module-tab" data-category="programming" onclick="filterByCategory('programming')">
+                💻 Programming
+            </button>
+            <button class="module-tab" data-category="web" onclick="filterByCategory('web')">
+                🌐 Web Dev
+            </button>
+            <button class="module-tab" data-category="mobile" onclick="filterByCategory('mobile')">
+                📱 Mobile
+            </button>
+            <button class="module-tab" data-category="data" onclick="filterByCategory('data')">
+                🧠 Data & AI
+            </button>
+            <button class="module-tab" data-category="cloud" onclick="filterByCategory('cloud')">
+                ☁️ Cloud & DevOps
+            </button>
+            <button class="module-tab" data-category="cs" onclick="filterByCategory('cs')">
+                🖥️ CS Fundamentals
+            </button>
+            <button class="module-tab" data-category="security" onclick="filterByCategory('security')">
+                🔒 Security
+            </button>
+            <button class="module-tab" data-category="math" onclick="filterByCategory('math')">
+                🔢 Mathematics
+            </button>
+            <button class="module-tab" data-category="science" onclick="filterByCategory('science')">
+                🔬 Science
+            </button>
+            <button class="module-tab" data-category="social" onclick="filterByCategory('social')">
+                🌍 Social Studies
+            </button>
+            <button class="module-tab" data-category="english" onclick="filterByCategory('english')">
+                📚 English
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- All Courses Section -->
+<section>
+    <div class="container">
+        <div id="coursesContainer" class="grid grid-3">
+            <!-- Courses will be dynamically loaded here -->
+        </div>
+    </section>
+</section>
+
+<style>
+.module-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.module-tab {
+    padding: 0.75rem 1.5rem;
+    background: var(--bg-primary);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Outfit', sans-serif;
+}
+
+.module-tab:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary);
+}
+
+.module-tab.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border-color: var(--primary);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+}
+
+.course-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.course-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+}
+
+.hidden {
+    display: none !important;
+}
+</style>
+
+<script>
+// Comprehensive course data
+const coursesData = [
+    // Programming Languages
+    { id: 'python-basics', name: 'Python Basics', instructor: 'John Smith', level: 'Beginner', emoji: '🐍', category: 'programming', desc: 'Learn Python from scratch. Perfect for beginners.' },
+    { id: 'python-advanced', name: 'Advanced Python Programming', instructor: 'John Smith', level: 'Advanced', emoji: '🐍', category: 'programming', desc: 'Master advanced Python concepts and patterns.' },
+    { id: 'javascript', name: 'JavaScript Mastery', instructor: 'Sarah Johnson', level: 'Intermediate', emoji: '📜', category: 'programming', desc: 'Master JavaScript and build dynamic applications.' },
+    { id: 'typescript', name: 'TypeScript for Developers', instructor: 'Sarah Johnson', level: 'Intermediate', emoji: '📘', category: 'programming', desc: 'Learn TypeScript for type-safe JavaScript.' },
+    { id: 'java-basics', name: 'Java Programming Basics', instructor: 'Alex Kumar', level: 'Beginner', emoji: '☕', category: 'programming', desc: 'Start your Java journey with fundamentals.' },
+    { id: 'java-advanced', name: 'Advanced Java Programming', instructor: 'Alex Kumar', level: 'Advanced', emoji: '☕', category: 'programming', desc: 'Master enterprise Java development.' },
+    { id: 'cpp', name: 'C++ Programming', instructor: 'Prof. Andrei Alekseyev', level: 'Intermediate', emoji: '⚙️', category: 'programming', desc: 'Learn system programming with C++.' },
+    { id: 'csharp', name: 'C# and .NET Development', instructor: 'Marcus Johnson', level: 'Intermediate', emoji: '🎯', category: 'programming', desc: 'Build robust applications with C# and .NET.' },
+    { id: 'rust', name: 'Rust Programming', instructor: 'Emma Wilson', level: 'Intermediate', emoji: '🦀', category: 'programming', desc: 'Modern systems programming with Rust.' },
+    { id: 'golang', name: 'Go (Golang) Programming', instructor: 'David Zhang', level: 'Intermediate', emoji: '🐹', category: 'programming', desc: 'Build scalable backend systems with Go.' },
+    { id: 'swift', name: 'Swift for iOS Development', instructor: 'Lisa Park', level: 'Intermediate', emoji: '🍎', category: 'programming', desc: 'Develop iOS apps with Swift.' },
+    { id: 'kotlin', name: 'Kotlin Programming', instructor: 'Daniel Lee', level: 'Beginner', emoji: '🔷', category: 'programming', desc: 'Modern Android development with Kotlin.' },
+    { id: 'php', name: 'PHP Web Development', instructor: 'Robert Brown', level: 'Beginner', emoji: '🐘', category: 'programming', desc: 'Build dynamic websites with PHP.' },
+    { id: 'ruby', name: 'Ruby on Rails Development', instructor: 'Jennifer White', level: 'Intermediate', emoji: '💎', category: 'programming', desc: 'Rapid web development with Rails.' },
+    { id: 'scala', name: 'Scala Functional Programming', instructor: 'Victor Chen', level: 'Advanced', emoji: '⚡', category: 'programming', desc: 'Functional programming with Scala.' },
+    
+    // Web Development
+    { id: 'web-dev', name: 'Full Stack Web Development', instructor: 'Mike Chen', level: 'Advanced', emoji: '🌐', category: 'web', desc: 'Build complete web applications.' },
+    { id: 'html-css', name: 'HTML & CSS Fundamentals', instructor: 'Nina Patel', level: 'Beginner', emoji: '🎨', category: 'web', desc: 'Master web design fundamentals.' },
+    { id: 'responsive-design', name: 'Responsive Web Design', instructor: 'Nina Patel', level: 'Intermediate', emoji: '📱', category: 'web', desc: 'Create responsive websites for all devices.' },
+    { id: 'react', name: 'React.js Mastery', instructor: 'Tom Brady', level: 'Intermediate', emoji: '⚛️', category: 'web', desc: 'Build modern UIs with React.' },
+    { id: 'angular', name: 'Angular Framework', instructor: 'Kevin Smith', level: 'Intermediate', emoji: '🔴', category: 'web', desc: 'Enterprise-scale web applications.' },
+    { id: 'vue', name: 'Vue.js Development', instructor: 'Grace Liu', level: 'Beginner', emoji: '💚', category: 'web', desc: 'Progressive web framework.' },
+    { id: 'node-js', name: 'Node.js Backend Development', instructor: 'Michael Zhang', level: 'Intermediate', emoji: '🟢', category: 'web', desc: 'Server-side JavaScript development.' },
+    { id: 'express', name: 'Express.js & REST APIs', instructor: 'Michael Zhang', level: 'Intermediate', emoji: '🚂', category: 'web', desc: 'Build REST APIs with Express.' },
+    { id: 'webpack', name: 'Webpack & Build Tools', instructor: 'Alex Rivera', level: 'Advanced', emoji: '📦', category: 'web', desc: 'Advanced bundling and optimization.' },
+    { id: 'nextjs', name: 'Next.js Full Stack', instructor: 'Chris Martin', level: 'Advanced', emoji: '▲', category: 'web', desc: 'Production-ready React framework.' },
+    
+    // Mobile Development
+    { id: 'mobile-dev', name: 'Mobile App Development', instructor: 'Lisa Garcia', level: 'Advanced', emoji: '📱', category: 'mobile', desc: 'Create cross-platform mobile apps.' },
+    { id: 'react-native', name: 'React Native Development', instructor: 'Amanda Foster', level: 'Intermediate', emoji: '⚛️', category: 'mobile', desc: 'Build native mobile apps with React.' },
+    { id: 'flutter', name: 'Flutter App Development', instructor: 'Raj Patel', level: 'Intermediate', emoji: '🎨', category: 'mobile', desc: 'Cross-platform development with Flutter.' },
+    { id: 'android', name: 'Android Development', instructor: 'James Wilson', level: 'Intermediate', emoji: '🤖', category: 'mobile', desc: 'Native Android app development.' },
+    { id: 'ios-dev', name: 'iOS App Development', instructor: 'Rachel Green', level: 'Intermediate', emoji: '🍎', category: 'mobile', desc: 'Native iOS app development.' },
+    { id: 'xamarin', name: 'Xamarin Cross-Platform', instructor: 'David Miller', level: 'Advanced', emoji: '❌', category: 'mobile', desc: 'Cross-platform .NET development.' },
+    { id: 'progressive-web', name: 'Progressive Web Apps (PWA)', instructor: 'Sarah Chen', level: 'Intermediate', emoji: '⚡', category: 'mobile', desc: 'Build app-like web experiences.' },
+    { id: 'mobile-testing', name: 'Mobile App Testing', instructor: 'Omar Hassan', level: 'Intermediate', emoji: '🧪', category: 'mobile', desc: 'QA and testing for mobile apps.' },
+    
+    // Data Science & AI
+    { id: 'data-science', name: 'Data Science Fundamentals', instructor: 'Dr. Patricia Moore', level: 'Intermediate', emoji: '📊', category: 'data', desc: 'Master data science basics.' },
+    { id: 'ml-basics', name: 'Machine Learning Fundamentals', instructor: 'Dr. Anna Martinez', level: 'Beginner', emoji: '🧠', category: 'data', desc: 'Introduction to machine learning.' },
+    { id: 'deep-learning', name: 'Deep Learning & Neural Networks', instructor: 'Prof. James Wilson', level: 'Advanced', emoji: '🧠', category: 'data', desc: 'Advanced neural network architectures.' },
+    { id: 'nlp', name: 'Natural Language Processing', instructor: 'Dr. Lisa Brown', level: 'Intermediate', emoji: '💬', category: 'data', desc: 'Process human language with AI.' },
+    { id: 'computer-vision', name: 'Computer Vision Basics', instructor: 'Dr. Hassan Ahmed', level: 'Intermediate', emoji: '👁️', category: 'data', desc: 'Image processing and analysis.' },
+    { id: 'data-analytics', name: 'Data Analytics with Python', instructor: 'Sarah Williams', level: 'Beginner', emoji: '📈', category: 'data', desc: 'Data analysis and visualization.' },
+    { id: 'pandas', name: 'Pandas for Data Analysis', instructor: 'Marcus Thompson', level: 'Beginner', emoji: '🐼', category: 'data', desc: 'Data manipulation with Pandas.' },
+    { id: 'tensorflow', name: 'TensorFlow & Keras', instructor: 'Dr. Yuki Tanaka', level: 'Advanced', emoji: '🔋', category: 'data', desc: 'Deep learning framework expertise.' },
+    { id: 'pytorch', name: 'PyTorch Deep Learning', instructor: 'Dr. Arjun Singh', level: 'Advanced', emoji: '🔥', category: 'data', desc: 'PyTorch for deep learning.' },
+    { id: 'sklearn', name: 'Scikit-Learn for ML', instructor: 'Elena Rossi', level: 'Intermediate', emoji: '🤖', category: 'data', desc: 'Machine learning with Scikit-Learn.' },
+    
+    // Computer Science
+    { id: 'data-structures', name: 'Data Structures & Algorithms', instructor: 'Dr. Emily White', level: 'Intermediate', emoji: '📊', category: 'cs', desc: 'Essential data structures and algorithms.' },
+    { id: 'algorithms', name: 'Algorithm Design & Analysis', instructor: 'Prof. Steven Brown', level: 'Advanced', emoji: '📐', category: 'cs', desc: 'Advanced algorithm design.' },
+    { id: 'operating-systems', name: 'Operating Systems Concepts', instructor: 'Dr. Frank Schmidt', level: 'Advanced', emoji: '⚙️', category: 'cs', desc: 'OS design and implementation.' },
+    { id: 'databases', name: 'Database Systems', instructor: 'Prof. David Lee', level: 'Intermediate', emoji: '🗄️', category: 'cs', desc: 'Database design and optimization.' },
+    { id: 'sql', name: 'SQL Mastery', instructor: 'Jennifer Lopez', level: 'Beginner', emoji: '📝', category: 'cs', desc: 'Master SQL queries.' },
+    { id: 'nosql', name: 'NoSQL Databases', instructor: 'Kevin O\'Brien', level: 'Intermediate', emoji: '🌳', category: 'cs', desc: 'MongoDB, Cassandra, and more.' },
+    { id: 'system-design', name: 'System Design & Architecture', instructor: 'Dr. Raj Reddy', level: 'Advanced', emoji: '🏗️', category: 'cs', desc: 'Scalable system design.' },
+    
+    // Cloud & DevOps
+    { id: 'aws', name: 'Amazon Web Services (AWS)', instructor: 'Tom Hardy', level: 'Intermediate', emoji: '☁️', category: 'cloud', desc: 'AWS cloud services mastery.' },
+    { id: 'azure', name: 'Microsoft Azure Cloud', instructor: 'Chris Wilson', level: 'Intermediate', emoji: '☁️', category: 'cloud', desc: 'Azure cloud platform.' },
+    { id: 'gcp', name: 'Google Cloud Platform', instructor: 'Priya Sharma', level: 'Intermediate', emoji: '☁️', category: 'cloud', desc: 'GCP services and tools.' },
+    { id: 'docker', name: 'Docker Containerization', instructor: 'Marcus Lee', level: 'Intermediate', emoji: '🐳', category: 'cloud', desc: 'Container technology with Docker.' },
+    { id: 'kubernetes', name: 'Kubernetes Orchestration', instructor: 'Dmitri Volkov', level: 'Advanced', emoji: '☸️', category: 'cloud', desc: 'Container orchestration.' },
+    { id: 'ci-cd', name: 'CI/CD Pipeline Automation', instructor: 'Sandra Kim', level: 'Intermediate', emoji: '🔄', category: 'cloud', desc: 'Continuous integration and deployment.' },
+    { id: 'devops', name: 'DevOps Engineering', instructor: 'Ricardo Fernandez', level: 'Advanced', emoji: '🔧', category: 'cloud', desc: 'DevOps practices and tools.' },
+    
+    // Security & Networking
+    { id: 'networking', name: 'Computer Networks', instructor: 'Dr. Robert Kim', level: 'Advanced', emoji: '🌐', category: 'security', desc: 'Network protocols and architecture.' },
+    { id: 'cybersecurity', name: 'Cybersecurity Fundamentals', instructor: 'Dr. Eric Johnson', level: 'Intermediate', emoji: '🔒', category: 'security', desc: 'Cybersecurity basics.' },
+    { id: 'ethical-hacking', name: 'Ethical Hacking & Penetration Testing', instructor: 'Marcus Black', level: 'Advanced', emoji: '🎯', category: 'security', desc: 'Ethical hacking techniques.' },
+    { id: 'cryptography', name: 'Cryptography & Encryption', instructor: 'Dr. Sophia Turner', level: 'Advanced', emoji: '🔐', category: 'security', desc: 'Encryption and cryptography.' },
+    { id: 'web-security', name: 'Web Security Essentials', instructor: 'Nathan Gray', level: 'Intermediate', emoji: '🛡️', category: 'security', desc: 'Secure web development.' },
+    
+    // Mathematics
+    { id: 'math-basics', name: 'Mathematics Fundamentals', instructor: 'Prof. Michael Johnson', level: 'Beginner', emoji: '🔢', category: 'math', desc: 'Essential math concepts and operations.' },
+    { id: 'algebra', name: 'Algebra Mastery', instructor: 'Prof. Michael Johnson', level: 'Beginner', emoji: '📐', category: 'math', desc: 'Comprehensive algebra from basics to advanced.' },
+    { id: 'geometry', name: 'Geometry Essentials', instructor: 'Dr. Patricia Lewis', level: 'Beginner', emoji: '🔺', category: 'math', desc: 'Geometry, shapes, and spatial reasoning.' },
+    { id: 'calculus', name: 'Calculus I & II', instructor: 'Prof. Robert Taylor', level: 'Intermediate', emoji: '∫', category: 'math', desc: 'Differential and integral calculus.' },
+    { id: 'statistics', name: 'Statistics & Probability', instructor: 'Dr. Elena Garcia', level: 'Intermediate', emoji: '📊', category: 'math', desc: 'Statistical analysis and probability theory.' },
+    { id: 'trigonometry', name: 'Trigonometry Mastery', instructor: 'Prof. David Chen', level: 'Beginner', emoji: '📈', category: 'math', desc: 'Trigonometric functions and applications.' },
+    
+    // Science
+    { id: 'science-basics', name: 'Science Fundamentals', instructor: 'Dr. Sarah Wilson', level: 'Beginner', emoji: '🔬', category: 'science', desc: 'Introduction to scientific method and discovery.' },
+    { id: 'physics', name: 'Physics: Mechanics & Motion', instructor: 'Prof. James Anderson', level: 'Intermediate', emoji: '⚛️', category: 'science', desc: 'Classical mechanics, motion, and forces.' },
+    { id: 'chemistry', name: 'Chemistry Essentials', instructor: 'Dr. Linda Martinez', level: 'Beginner', emoji: '🧪', category: 'science', desc: 'Chemical reactions, atoms, and molecules.' },
+    { id: 'biology', name: 'Biology: Life Sciences', instructor: 'Prof. Emma Brown', level: 'Beginner', emoji: '🧬', category: 'science', desc: 'Living organisms, cells, and ecosystems.' },
+    { id: 'environmental-science', name: 'Environmental Science', instructor: 'Dr. Mark Phillips', level: 'Intermediate', emoji: '🌱', category: 'science', desc: 'Environmental systems and sustainability.' },
+    
+    // Social Studies
+    { id: 'social-studies', name: 'Social Studies Fundamentals', instructor: 'Prof. William Harris', level: 'Beginner', emoji: '🌍', category: 'social', desc: 'Society, culture, and human interaction.' },
+    { id: 'history', name: 'World History Overview', instructor: 'Dr. Thomas White', level: 'Beginner', emoji: '📜', category: 'social', desc: 'Major events and civilizations throughout history.' },
+    { id: 'geography', name: 'Geography & Cultures', instructor: 'Prof. Christopher Lee', level: 'Beginner', emoji: '🗺️', category: 'social', desc: 'World geography, cultures, and regions.' },
+    { id: 'civics', name: 'Civics & Government', instructor: 'Dr. Nancy Davis', level: 'Beginner', emoji: '⚖️', category: 'social', desc: 'Government systems, rights, and citizenship.' },
+    { id: 'economics', name: 'Economics Basics', instructor: 'Prof. Richard Miller', level: 'Intermediate', emoji: '💰', category: 'social', desc: 'Economic systems, markets, and finance.' },
+    
+    // English
+    { id: 'english-basics', name: 'English Language Fundamentals', instructor: 'Dr. Victoria Turner', level: 'Beginner', emoji: '📚', category: 'english', desc: 'Grammar, vocabulary, and language skills.' },
+    { id: 'literature', name: 'World Literature & Classics', instructor: 'Prof. Caroline King', level: 'Intermediate', emoji: '📖', category: 'english', desc: 'Exploring classic and contemporary literature.' },
+    { id: 'writing-skills', name: 'Professional Writing Skills', instructor: 'Dr. Benjamin Scott', level: 'Intermediate', emoji: '✍️', category: 'english', desc: 'Essay writing, communication, and content creation.' },
+    { id: 'grammar', name: 'Grammar & Composition', instructor: 'Prof. Amanda Green', level: 'Beginner', emoji: '✏️', category: 'english', desc: 'Master grammar rules and composition.' },
+    { id: 'public-speaking', name: 'Public Speaking Mastery', instructor: 'Dr. Jonathan Blake', level: 'Intermediate', emoji: '🎤', category: 'english', desc: 'Confident communication and presentation skills.' },
+];
+
+function renderCourses(courses = coursesData) {
+    const container = document.getElementById('coursesContainer');
+    container.innerHTML = '';
+    
+    courses.forEach(course => {
+        const courseCard = document.createElement('div');
+        courseCard.className = 'card course-card';
+        courseCard.setAttribute('data-course', course.id);
+        courseCard.setAttribute('data-level', course.level);
+        courseCard.setAttribute('data-category', course.category);
+        courseCard.setAttribute('data-name', course.name.toLowerCase());
+        
+        const levelColor = course.level === 'Beginner' ? '#10b981' : course.level === 'Intermediate' ? '#f59e0b' : '#ef4444';
+        
+        courseCard.innerHTML = `
+            <div class="course-header">${course.emoji}</div>
+            <div class="course-body">
+                <h3>${course.name}</h3>
+                <div class="course-meta">
+                    <span>👨‍🏫 ${course.instructor}</span>
+                    <span class="badge" style="background: ${levelColor}; color: white;">${course.level}</span>
+                </div>
+                <p>${course.desc}</p>
+                <div class="course-meta">
+                    <span>⏱️ 8-14 weeks</span>
+                    <span class="course-rating">⭐ 4.8</span>
+                </div>
+                <div class="course-footer">
+                    <button class="btn btn-primary enroll-btn" onclick="handleCourseClick('${course.id}', '${course.name}')"><span>Learn Now</span></button>
+                </div>
+            </div>
+        `;
+        
+        container.appendChild(courseCard);
+    });
+}
+
+function filterByCategory(category) {
+    document.querySelectorAll('.module-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelector(`[data-category="${category}"]`).classList.add('active');
+    
+    if (category === 'all') {
+        renderCourses(coursesData);
+    } else {
+        const filtered = coursesData.filter(course => course.category === category);
+        renderCourses(filtered);
+    }
+    filterCourses();
+}
+
+function filterCourses() {
+    const searchTerm = document.getElementById('courseSearch').value.toLowerCase();
+    const levelFilter = document.getElementById('levelFilter').value;
+    
+    const cards = document.querySelectorAll('.course-card');
+    cards.forEach(card => {
+        const name = card.getAttribute('data-name');
+        const level = card.getAttribute('data-level');
+        
+        const matchesSearch = name.includes(searchTerm);
+        const matchesLevel = levelFilter === '' || level === levelFilter;
+        
+        if (matchesSearch && matchesLevel) {
+            card.classList.remove('hidden');
+        } else {
+            card.classList.add('hidden');
+        }
+    });
+}
+
+function handleCourseClick(courseId, courseName) {
+    window.location.href = `/elearning/course/${courseId}`;
+}
+
+// Initial render
+renderCourses();
+</script>
+{% endblock %}

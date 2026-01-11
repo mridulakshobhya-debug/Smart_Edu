@@ -1,0 +1,330 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Module Header -->
+<section style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(124, 58, 237, 0.1)); padding: 2rem 0; margin-bottom: 2rem;">
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <a href="{{ url_for('elearning.course_detail', course_id=course_id) }}" style="color: var(--primary); text-decoration: none;">← Back to Course</a>
+                <h1 style="margin: 0.5rem 0 0 0;">{{ module_name }}</h1>
+                <p style="color: var(--text-secondary); margin: 0.5rem 0 0 0;">{{ course_name }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<section>
+    <div class="container">
+        <div style="max-width: 1000px; margin: 0 auto;">
+            <!-- Enrollment Notice -->
+            {% if not is_enrolled %}
+            <div class="card" style="margin-bottom: 2rem; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1)); border-left: 4px solid var(--primary);">
+                <div style="padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h3 style="margin: 0 0 0.5rem 0;">📚 Preview Mode</h3>
+                        <p style="color: var(--text-secondary); margin: 0;">Enroll in this course to access quizzes and earn certifications.</p>
+                    </div>
+                    <a href="{{ url_for('elearning.enroll_course', course_id=course_id) }}" 
+                       style="padding: 0.8rem 1.5rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; text-decoration: none; white-space: nowrap;">
+                        ✓ Enroll Now
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+            <!-- Video Section -->
+            {% if module_info.video_url %}
+            <div class="card" style="margin-bottom: 2rem;">
+                <div style="padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px;">
+                    <h3 style="margin-top: 0;">Module Video</h3>
+                    <div style="aspect-ratio: 16/9; margin-bottom: 1rem;">
+                        <iframe 
+                            width="100%" 
+                            height="100%" 
+                            src="{{ module_info.video_url }}" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen
+                            style="border-radius: 8px;">
+                        </iframe>
+                    </div>
+                    <p style="color: var(--text-secondary); margin: 0;">Duration: {{ module_info.video_duration }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Content Tabs -->
+            <div style="display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid var(--border); overflow-x: auto;">
+                <button onclick="switchTab(event, 'information')" class="tab-btn active" style="padding: 1rem 1.5rem; background: none; border: none; border-bottom: 3px solid var(--primary); cursor: pointer; font-weight: 600; color: var(--text-primary); font-size: 1rem; white-space: nowrap;">📖 Information</button>
+                <button onclick="switchTab(event, 'objectives')" class="tab-btn" style="padding: 1rem 1.5rem; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: 600; color: var(--text-secondary); font-size: 1rem; white-space: nowrap;">🎯 Learning Objectives</button>
+                <button onclick="switchTab(event, 'quiz')" class="tab-btn" style="padding: 1rem 1.5rem; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: 600; color: var(--text-secondary); font-size: 1rem; white-space: nowrap;">✍️ Quiz</button>
+            </div>
+
+            <!-- Information Tab -->
+            <div id="tab-information" class="tab-content" style="display: block;">
+                <div class="card" style="margin-bottom: 2rem;">
+                    <div style="padding: 2rem;">
+                        {% if module_info.information %}
+                            {{ module_info.information | safe }}
+                        {% else %}
+                            <h2>Module Information</h2>
+                            <p>Content coming soon.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Objectives Tab -->
+            <div id="tab-objectives" class="tab-content" style="display: none;">
+                <div class="card" style="margin-bottom: 2rem;">
+                    <div style="padding: 2rem;">
+                        <h2>Learning Objectives</h2>
+                        {% if module_info.learning_objectives %}
+                            <ul style="color: var(--text-secondary); line-height: 2; margin-left: 1.5rem;">
+                                {% for objective in module_info.learning_objectives %}
+                                    <li style="margin-bottom: 1rem;">
+                                        <strong style="color: var(--primary);">✓</strong> {{ objective }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p style="color: var(--text-secondary);">No learning objectives defined yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Tab -->
+            <div id="tab-quiz" class="tab-content" style="display: none;">
+                <div class="card" style="margin-bottom: 2rem;">
+                    <div style="padding: 2rem;">
+                        <h2>Module Quiz</h2>
+                        {% if not is_enrolled %}
+                            <div style="padding: 1.5rem; background: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b; margin-bottom: 1.5rem;">
+                                <p style="color: #92400e; margin: 0; font-weight: 600;">
+                                    🔒 Enroll in this course to access the quiz and earn certification.
+                                </p>
+                            </div>
+                            <a href="{{ url_for('elearning.enroll_course', course_id=course_id) }}" 
+                               style="display: inline-block; padding: 0.8rem 1.5rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; text-decoration: none;">
+                                ✓ Enroll Now to Access Quiz
+                            </a>
+                        {% else %}
+                            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                                Test your understanding of the module content. You need to answer at least 70% correctly to pass.
+                            </p>
+                            {% if module_info.quiz_questions %}
+                            <form id="quiz-form" style="display: flex; flex-direction: column; gap: 2rem;">
+                                {% for question in module_info.quiz_questions %}
+                                    <div style="padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px; border-left: 4px solid var(--primary);">
+                                        <h4 style="margin: 0 0 1rem 0;">{{ loop.index }}. {{ question.question }}</h4>
+                                        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                                            {% for option in question.options %}
+                                                <label style="display: flex; align-items: center; gap: 0.8rem; cursor: pointer; padding: 0.8rem; border-radius: 8px; transition: background 0.2s; margin-left: 0;" 
+                                                       onmouseover="this.style.background='rgba(37,99,235,0.1)'" 
+                                                       onmouseout="this.style.background='transparent'">
+                                                    <input type="radio" name="question_{{ loop.index0 }}" value="{{ loop.index0 }}" style="cursor: pointer; width: 18px; height: 18px;">
+                                                    <span style="color: var(--text-secondary);">{{ option }}</span>
+                                                </label>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+
+                                <button type="submit" style="
+                                    padding: 1rem 2rem;
+                                    background: var(--primary);
+                                    color: white;
+                                    border: none;
+                                    border-radius: 8px;
+                                    font-weight: 600;
+                                    font-size: 1rem;
+                                    cursor: pointer;
+                                    transition: all 0.2s;
+                                " 
+                                onmouseover="this.style.opacity='0.9'" 
+                                onmouseout="this.style.opacity='1'">
+                                    Submit Quiz
+                                </button>
+                            </form>
+
+                            <!-- Quiz Results -->
+                            <div id="quiz-results" style="display: none; margin-top: 2rem;">
+                                <div style="padding: 2rem; background: var(--bg-secondary); border-radius: 12px; border-left: 4px solid var(--success);">
+                                    <h3 id="results-title">Quiz Results</h3>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+                                        <div style="padding: 1rem; background: var(--bg-primary); border-radius: 8px; text-align: center;">
+                                            <p style="color: var(--text-tertiary); margin: 0; font-size: 0.9rem;">Your Score</p>
+                                            <p id="score-display" style="font-size: 2rem; font-weight: 700; color: var(--primary); margin: 0.5rem 0 0 0;">--%</p>
+                                        </div>
+                                        <div style="padding: 1rem; background: var(--bg-primary); border-radius: 8px; text-align: center;">
+                                            <p style="color: var(--text-tertiary); margin: 0; font-size: 0.9rem;">Correct Answers</p>
+                                            <p id="correct-display" style="font-size: 2rem; font-weight: 700; color: var(--success); margin: 0.5rem 0 0 0;">--/--</p>
+                                        </div>
+                                        <div style="padding: 1rem; background: var(--bg-primary); border-radius: 8px; text-align: center;">
+                                            <p style="color: var(--text-tertiary); margin: 0; font-size: 0.9rem;">Status</p>
+                                            <p id="status-display" style="font-size: 1.5rem; font-weight: 700; color: var(--success); margin: 0.5rem 0 0 0;">✓ Passed</p>
+                                        </div>
+                                    </div>
+
+                                    <div id="detailed-results" style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                                        <!-- Results will be inserted here -->
+                                    </div>
+
+                                    <button onclick="resetQuiz()" style="
+                                        margin-top: 1rem;
+                                        padding: 0.8rem 1.5rem;
+                                        background: var(--primary);
+                                        color: white;
+                                        border: none;
+                                        border-radius: 8px;
+                                        font-weight: 600;
+                                        cursor: pointer;
+                                        transition: all 0.2s;
+                                    "
+                                    onmouseover="this.style.opacity='0.9'" 
+                                    onmouseout="this.style.opacity='1'">
+                                        Retake Quiz
+                                    </button>
+                                </div>
+                            </div>
+                            {% else %}
+                                <p style="color: var(--text-secondary);">No quiz available for this module yet.</p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complete Module Button -->
+            <div style="text-align: center; padding: 2rem 0;">
+                {% if not is_enrolled %}
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Enroll to complete this module and track your progress</p>
+                    <a href="{{ url_for('elearning.enroll_course', course_id=course_id) }}" 
+                       style="display: inline-block; padding: 1rem 2rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; text-decoration: none; transition: all 0.2s;"
+                       onmouseover="this.style.opacity='0.9'" 
+                       onmouseout="this.style.opacity='1'">
+                        ✓ Enroll Now
+                    </a>
+                {% else %}
+                    <button onclick="completeModule()" style="
+                        padding: 1rem 2rem;
+                        background: #10b981;
+                        color: white;
+                        border: none;
+                        border-radius: 8px;
+                        font-weight: 600;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                    "
+                    onmouseover="this.style.opacity='0.9'" 
+                    onmouseout="this.style.opacity='1'">
+                        ✓ Mark Module as Complete
+                    </button>
+                {% endif %}
+        </div>
+    </div>
+</section>
+
+<script>
+function switchTab(event, tabName) {
+    event.preventDefault();
+    document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.style.borderBottomColor = 'transparent';
+        btn.style.color = 'var(--text-secondary)';
+    });
+    
+    document.getElementById('tab-' + tabName).style.display = 'block';
+    event.target.style.borderBottomColor = 'var(--primary)';
+    event.target.style.color = 'var(--text-primary)';
+}
+
+document.getElementById('quiz-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Get all answers
+    const answers = [];
+    const quizForm = document.getElementById('quiz-form');
+    const radios = quizForm.querySelectorAll('input[type="radio"]:checked');
+    
+    if (radios.length === 0) {
+        alert('Please answer at least one question.');
+        return;
+    }
+    
+    // Collect answers in order
+    radios.forEach(radio => {
+        answers.push(parseInt(radio.value));
+    });
+    
+    try {
+        const response = await fetch('{{ url_for("elearning.submit_quiz", course_id=course_id, module_id=module_id) }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ answers: answers })
+        });
+        
+        const data = await response.json();
+        displayResults(data);
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error submitting quiz. Please try again.');
+    }
+});
+
+function displayResults(data) {
+    document.getElementById('quiz-form').style.display = 'none';
+    document.getElementById('quiz-results').style.display = 'block';
+    
+    const score = data.score;
+    const isPassed = data.passed;
+    
+    document.getElementById('score-display').textContent = score + '%';
+    document.getElementById('correct-display').textContent = data.correct_count + '/' + data.total_questions;
+    document.getElementById('status-display').textContent = isPassed ? '✓ Passed' : '✗ Review Needed';
+    document.getElementById('status-display').style.color = isPassed ? 'var(--success)' : '#ef4444';
+    document.getElementById('results-title').textContent = isPassed ? '🎉 Congratulations!' : 'Quiz Results';
+    
+    // Display detailed results
+    const detailedResults = document.getElementById('detailed-results');
+    detailedResults.innerHTML = '';
+    
+    data.results.forEach((result, index) => {
+        const resultDiv = document.createElement('div');
+        resultDiv.style.cssText = `
+            padding: 1rem;
+            background: ${result.is_correct ? '#d1fae5' : '#fee2e2'};
+            border-left: 4px solid ${result.is_correct ? '#10b981' : '#ef4444'};
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        `;
+        
+        resultDiv.innerHTML = `
+            <div style="display: flex; align-items: start; gap: 1rem;">
+                <span style="font-size: 1.5rem;">${result.is_correct ? '✓' : '✗'}</span>
+                <div style="flex: 1;">
+                    <p style="color: #1f2937; font-weight: 600; margin: 0;">Question ${index + 1}</p>
+                    <p style="color: #374151; margin: 0.5rem 0 0 0;">${result.explanation}</p>
+                </div>
+            </div>
+        `;
+        detailedResults.appendChild(resultDiv);
+    });
+}
+
+function resetQuiz() {
+    document.getElementById('quiz-form').style.display = 'flex';
+    document.getElementById('quiz-results').style.display = 'none';
+    document.getElementById('quiz-form').reset();
+}
+
+function completeModule() {
+    alert('✓ Module marked as complete!\n\nExcellent work! Your progress has been saved.');
+}
+</script>
+{% endblock %}

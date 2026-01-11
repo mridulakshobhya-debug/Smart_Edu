@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="auth-page">
+    <button class="auth-theme-toggle" aria-label="Toggle theme">
+        <span class="theme-icon">🌙</span>
+    </button>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1 class="auth-title">Welcome Back</h1>
+            <p class="auth-subtitle">Sign in to your SmartEdu Pro account</p>
+
+            <form method="POST" class="auth-form">
+                <div class="auth-form-group">
+                    <label for="email">Email or Username</label>
+                    <input type="text" id="email" name="email" required placeholder="your@email.com or username">
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                </div>
+
+                <div class="auth-checkbox-group">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+
+                <button type="submit" class="btn auth-submit"><span>Sign In</span></button>
+            </form>
+
+            <div class="auth-divider">New to SmartEdu?</div>
+
+            <div class="auth-links" style="text-align: center; padding: 0 0 2rem;">
+                <a href="{{ url_for('auth.signup') }}">Create a free account</a>
+            </div>
+
+            <div class="auth-footer">
+                By signing in, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+

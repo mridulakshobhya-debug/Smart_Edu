@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .picture-selection {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 10px;
+        margin-top: 10px;
+        margin-bottom: 15px;
+    }
+
+    .picture-option {
+        text-align: center;
+        cursor: pointer;
+        padding: 8px;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .picture-option:hover {
+        border-color: var(--primary);
+        transform: scale(1.05);
+    }
+
+    .picture-option input[type="radio"] {
+        display: none;
+    }
+
+    .picture-option input[type="radio"]:checked + .picture-display {
+        border-color: var(--primary);
+        box-shadow: 0 0 8px rgba(var(--primary-rgb), 0.5);
+    }
+
+    .picture-display {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--bg-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8em;
+        margin: 0 auto 5px;
+        border: 2px solid var(--border);
+        transition: all 0.3s ease;
+    }
+
+    .onboarding-section {
+        background: var(--bg-secondary);
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+        border-left: 3px solid var(--primary);
+    }
+
+    .onboarding-section h3 {
+        margin-top: 0;
+        color: var(--primary);
+        font-size: 0.95em;
+    }
+</style>
+
+<section class="auth-page">
+    <button class="auth-theme-toggle" aria-label="Toggle theme">
+        <span class="theme-icon">🌙</span>
+    </button>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1 class="auth-title">Create Your Account</h1>
+            <p class="auth-subtitle">Join 2M+ learners on SmartEdu Pro</p>
+
+            <form method="POST" class="auth-form">
+                <div class="auth-form-group">
+                    <label for="full_name">Full Name</label>
+                    <input type="text" id="full_name" name="full_name" required placeholder="John Doe">
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required placeholder="johndoe">
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="your@email.com">
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                    <p class="auth-form-hint">At least 6 characters</p>
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required placeholder="••••••••">
+                </div>
+
+                <!-- Onboarding Questions Section -->
+                <div class="onboarding-section">
+                    <h3>🎯 Tell Us About Yourself</h3>
+                    
+                    <div class="auth-form-group">
+                        <label for="learning_goal">What's Your Learning Goal?</label>
+                        <input type="text" id="learning_goal" name="learning_goal" placeholder="e.g., Learn Web Development" required>
+                    </div>
+
+                    <div class="auth-form-group">
+                        <label for="heard_from">Where Did You Hear About SmartEdu?</label>
+                        <select id="heard_from" name="heard_from" required>
+                            <option value="">-- Select an option --</option>
+                            <option value="Social Media">Social Media</option>
+                            <option value="Search Engine">Search Engine</option>
+                            <option value="Friend/Family">Friend/Family</option>
+                            <option value="Advertisement">Advertisement</option>
+                            <option value="School/University">School/University</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Profile Picture Selection -->
+                <div class="onboarding-section">
+                    <h3>📸 Choose Your Profile Picture</h3>
+                    <div class="picture-selection">
+                        <label class="picture-option">
+                            <input type="radio" name="profile_picture" value="profile_1.png" checked required>
+                            <div class="picture-display">😊</div>
+                            <small>Smile</small>
+                        </label>
+                        <label class="picture-option">
+                            <input type="radio" name="profile_picture" value="profile_2.png">
+                            <div class="picture-display">🤓</div>
+                            <small>Smart</small>
+                        </label>
+                        <label class="picture-option">
+                            <input type="radio" name="profile_picture" value="profile_3.png">
+                            <div class="picture-display">🚀</div>
+                            <small>Rocket</small>
+                        </label>
+                        <label class="picture-option">
+                            <input type="radio" name="profile_picture" value="profile_4.png">
+                            <div class="picture-display">⭐</div>
+                            <small>Star</small>
+                        </label>
+                        <label class="picture-option">
+                            <input type="radio" name="profile_picture" value="profile_5.png">
+                            <div class="picture-display">🎓</div>
+                            <small>Graduate</small>
+                        </label>
+                        <label class="picture-option">
+                            <input type="radio" name="profile_picture" value="profile_6.png">
+                            <div class="picture-display">🏆</div>
+                            <small>Champion</small>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="auth-checkbox-group">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">I agree to <a href="#" style="color: var(--primary); text-decoration: none;">Terms of Service</a> and <a href="#" style="color: var(--primary); text-decoration: none;">Privacy Policy</a></label>
+                </div>
+
+                <button type="submit" class="btn auth-submit"><span>Create Account</span></button>
+            </form>
+
+            <div class="auth-divider">Already have an account?</div>
+
+            <div class="auth-links" style="text-align: center; padding: 0 0 2rem;">
+                <a href="{{ url_for('auth.login') }}">Sign in instead</a>
+            </div>
+
+            <div class="auth-footer">
+                By creating an account, you accept our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
